@@ -5,7 +5,11 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
-
+# Copy app code and assets
+COPY app/app.py .                     
+COPY templates/ templates/      
+COPY static/ static/            
+COPY models/ models/             
 EXPOSE 8080
 
 ENV FLASK_APP=app.py
