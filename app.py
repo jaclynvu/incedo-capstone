@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 import pickle
 import numpy as np
 
@@ -15,7 +15,7 @@ models = {
 
 @app.route("/")
 def home():
-    return jsonify({"message": "Prediction API is running. Use /predict/<model_name>."})
+    return render_template("index.html")
 
 @app.route("/predict/<model_name>", methods=["POST"])
 def predict(model_name):
