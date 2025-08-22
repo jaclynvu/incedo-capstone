@@ -29,7 +29,14 @@ def predict(model_name):
     model = models[model_name]
 
     try:
-        features = np.array(data).reshape(1, -1)
+        # features = np.array(data).reshape(1, -1)
+        features = data.get("features")
+
+        # If single row (flat list), wrap into 2D array
+        if isinstance(features[0], (int, float)):
+            features = [features]
+
+        features = np.array(features)
         prediction = model.predict(features)
 
         # Handle regression vs classification vs clustering
