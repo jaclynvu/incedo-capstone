@@ -150,3 +150,99 @@ gcloud run deploy customer-intel-api \
   --image us-central1-docker.pkg.dev/<PROJECT_ID>/incedo-repo/customer-intel-api \
   --platform managed --region us-central1 --allow-unauthenticated
 
+## Testing Predictions
+
+# kmeans
+
+https://incedo-capstone-290529186156.us-central1.run.app/predict/kmeans
+{
+  "features": [-0.331414, -0.705075, -0.437972, -0.111310, 0.419732]
+}
+
+# logistic regression
+https://incedo-capstone-290529186156.us-central1.run.app/predict/kmeans
+{
+  "features": [
+    120.5, 2, 241.0, 28, 10,
+    0.1, 0.6, 0.3, 0.5, 60,
+    2024, 8, 3, 7, 12,
+    199.9, 1, 0, 0, 1,
+    0, 1, 0, 0, 1,
+    0, 0, 1, 0, 0,
+    0, 1, 0, 0, 1
+  ]
+}
+
+# decision tree
+https://incedo-capstone-290529186156.us-central1.run.app/predict/decision_tree
+{
+  "features": [
+    120.5, 2, 241.0, 28, 10,
+    0.1, 0.6, 0.3, 0.5, 60,
+    2024, 8, 3, 7, 12,
+    199.9, 1, 0, 0, 1,
+    0, 1, 0, 0, 1,
+    0, 0, 1, 0, 0,
+    0, 1, 0, 0, 1
+  ]
+}
+
+# linear regression 
+https://incedo-capstone-290529186156.us-central1.run.app/predict/linear_reg
+{
+  "features": [
+    35,          // age
+    0,           // churn
+    12,          // tenure_months
+    0.1,         // neg
+    0.7,         // neu
+    0.2,         // pos
+    0.3,         // compound
+    45,          // days_since_last_purchase
+    2023,        // sale_year
+    7,           // sale_month
+    2,           // freq_3m
+    5,           // freq_6m
+    10,          // freq_12m
+    250.5,       // avg_order_value
+    1,           // gender_Male
+    0,           // region_North
+    1,           // region_South
+    0,           // region_West
+    1,           // segment_Corporate
+    0,           // segment_Small Business
+    0,           // category_Furniture
+    1,           // category_Office Supplies
+    0,           // product_name_Headphones
+    1,           // product_name_Laptop
+    0,           // product_name_Monitor
+    0,           // product_name_Notebook
+    0,           // product_name_Office Chair
+    1,           // product_name_Pen Pack
+    0,           // product_name_Printer
+    0,           // product_name_Projector
+    1,           // product_name_Smartphone
+    0,           // sentiment_new_Neutral
+    1,           // sentiment_new_Positive
+    200.0,       // rolling_mean_7
+    1400.0,      // rolling_sum_7
+    15.0,        // rolling_std_7
+    220.0,       // rolling_mean_30
+    6600.0,      // rolling_sum_30
+    50.0         // rolling_std_30
+  ]
+}
+
+# random forest
+https://incedo-capstone-290529186156.us-central1.run.app/predict/random_forest
+{
+  "features": [
+    120.5, 2, 241.0, 28, 10,
+    0.1, 0.6, 0.3, 0.5, 60,
+    2024, 8, 3, 7, 12,
+    199.9, 1, 0, 0, 1,
+    0, 1, 0, 0, 1,
+    0, 0, 1, 0, 0,
+    0, 1, 0, 0, 1
+  ]
+}
