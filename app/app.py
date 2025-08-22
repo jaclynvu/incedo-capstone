@@ -22,27 +22,32 @@ def predict(model_name):
     if model_name not in models:
         return jsonify({"error": f"Model '{model_name}' not found"}), 400
 
-    data = request.json.get("features")
-    if data is None:
-        return jsonify({"error": "Request must contain 'features'"}), 400
-
-    model = models[model_name]
-
     try:
-        # features = np.array(data).reshape(1, -1)
-        features = data.get("features")
+        data = request.get_json()
 
-        # If single row (flat list), wrap into 2D array
+        # Accept dict or raw list
+        if isinstance(data, dict):
+            features = data.get("features")
+        elif isinstance(data, list):
+            features = data
+        else:
+            return jsonify({"error": "Request body must contain a 'features' list"}), 400
+
+        if features is None:
+            return jsonify({"error": "Missing 'features' in request"}), 400
+
+        # If single row (flat list), wrap into 2D
         if isinstance(features[0], (int, float)):
             features = [features]
 
         features = np.array(features)
+        model = models[model_name]
         prediction = model.predict(features)
 
         # Handle regression vs classification vs clustering
         if model_name in ["linear_reg", "random_forest", "decision_tree"]:
             result = float(prediction[0])  # regression output
-        elif model_name in ["logistic_reg"]:
+        elif model_name == "logistic_reg":
             result = int(prediction[0])    # classification output
         elif model_name == "kmeans":
             result = int(prediction[0])    # cluster label
@@ -51,11 +56,13 @@ def predict(model_name):
 
         return jsonify({
             "model_name": model_name,
-            "features": features,
-            "prediction": float(prediction)
+            "features": features.tolist(),  # make JSON serializable
+            "prediction": result
         })
+
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8080)
