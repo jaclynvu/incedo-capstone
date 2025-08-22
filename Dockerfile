@@ -7,7 +7,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 # Copy app code and assets
 COPY app/app.py .                     
-COPY app/template/ template/      
+COPY app/templates/ templates/      
 COPY app/static/ static/            
 COPY models/ models/             
 EXPOSE 8080
