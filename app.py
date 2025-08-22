@@ -1,41 +1,54 @@
 from flask import Flask, request, jsonify
 import pickle
-import numpy as np 
+import numpy as np
 
 app = Flask(__name__)
-with open("models"
-"/logistic_model.pkl", "rb") as f:
-    log_model = pickle.load(f)
-with open("models/kmeans_model.pkl", "rb") as f:
-    kmeans_model = pickle.load(f)
+
+# Load models
+models = {
+    "linear_reg": pickle.load(open("models/linear_reg.pkl", "rb")),
+    "logistic_reg": pickle.load(open("models/logistic_reg.pkl", "rb")),
+    "decision_tree": pickle.load(open("models/decision_tree.pkl", "rb")),
+    "random_forest": pickle.load(open("models/random_forest.pkl", "rb")),
+    "kmeans": pickle.load(open("models/kmeans.pkl", "rb"))
+}
 
 @app.route("/")
 def home():
-    return jsonify({"message":"Iris ML App is Running"}), 200
-@app.route("/predict", methods=["POST"])
-def predict():
+    return jsonify({"message": "Prediction API is running. Use /predict/<model_name>."})
+
+@app.route("/predict/<model_name>", methods=["POST"])
+def predict(model_name):
+    if model_name not in models:
+        return jsonify({"error": f"Model '{model_name}' not found"}), 400
+
+    data = request.json.get("features")
+    if data is None:
+        return jsonify({"error": "Request must contain 'features'"}), 400
+
+    model = models[model_name]
+
     try:
-        data = request.get_json()
-        model_type = data.get('model_type')
-        feature = data.get('features')
+        features = np.array(data).reshape(1, -1)
+        prediction = model.predict(features)
 
-        if not model_type or not feature:
-            return jsonify({"error": "model_type and features are required"}), 400
-        
-        data = np.array(feature).reshape(1, -1)
-
-        if model_type == "logreg":
-            prediction = log_model.predict(data)[0]
-        elif model_type == "kmeans":
-            prediction = kmeans_model.predict(data)[0]
+        # Handle regression vs classification vs clustering
+        if model_name in ["linear_reg", "random_forest", "decision_tree"]:
+            result = float(prediction[0])  # regression output
+        elif model_name in ["logistic_reg"]:
+            result = int(prediction[0])    # classification output
+        elif model_name == "kmeans":
+            result = int(prediction[0])    # cluster label
         else:
-            return jsonify({"error": "Invalid model_type. Use 'logreg' or 'kmeans'."}), 400
-        
+            result = str(prediction[0])
+
         return jsonify({
-            "model_type": model_type,
-            "features": feature,
-            "prediction": int(prediction)
-            }), 200
-    except Exception as e: 
+            "model_name": model_name,
+            "features": features,
+            "prediction": float(prediction)
+        })
+    except Exception as e:
         return jsonify({"error": str(e)}), 500
-    
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=8080)
