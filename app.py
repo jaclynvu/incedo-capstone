@@ -7,10 +7,10 @@ app = Flask(__name__)
 # Load models
 models = {
     "linear_reg": pickle.load(open("models/linear_reg.pkl", "rb")),
-    "logistic_reg": pickle.load(open("models/logistic_reg.pkl", "rb")),
+    "logistic_reg": pickle.load(open("models/log_reg.pkl", "rb")),
     "decision_tree": pickle.load(open("models/decision_tree.pkl", "rb")),
     "random_forest": pickle.load(open("models/random_forest.pkl", "rb")),
-    "kmeans": pickle.load(open("models/kmeans.pkl", "rb"))
+    "kmeans": pickle.load(open("models/kmeans_model.pkl", "rb"))
 }
 
 @app.route("/")
