@@ -8,7 +8,7 @@ COPY . .
 # Copy app code and assets
 COPY app/app.py .                     
 COPY templates/ templates/      
-COPY static/ static/            
+COPY app/static/ static/            
 COPY models/ models/             
 EXPOSE 8080
 
